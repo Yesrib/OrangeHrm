@@ -9,6 +9,9 @@ public class ConfigReader {
 
     static {
         try {
+            // Load the properties file from the classpath. The resource path should be
+            // the package path where the file will be located at runtime, not the
+            // project's source tree path.
             InputStream inputStream = ConfigReader.class.getClassLoader()
                     .getResourceAsStream("org/selenium/configs/Config.properties");
             if (inputStream == null) {
