@@ -13,8 +13,9 @@ pipeline {
 
         stage('Start Selenium Grid') {
             steps {
-                sh 'docker-compose up -d'
-                sh 'sleep 10' // Wait for grid to be ready
+                // Using 'bat' instead of 'sh', and 'timeout' instead of 'sleep'
+                bat 'docker-compose up -d'
+                bat 'timeout /t 10 /nobreak'
             }
         }
 
@@ -22,25 +23,24 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'app-credentials',
                                                   usernameVariable: 'APP_USERNAME',
-                                                   passwordVariable: 'APP_PASSWORD')]) {
-                sh 'mvn clean install -Dexecution=remote -Dbrowser=chrome -Dgrid.url=http://localhost:4444/wd/hub'
+                                                  passwordVariable: 'APP_PASSWORD')]) {
+                    bat 'mvn clean install -Dexecution=remote -Dbrowser=chrome -Dgrid.url=http://localhost:4444/wd/hub'
                 }
             }
         }
 
-//         stage('Generate Allure Report') {
-//             steps {
-//                 sh 'mvn allure:report'
-//             }
-//         }
+//      stage('Generate Allure Report') {
+//          steps {
+//              bat 'mvn allure:report'
+//          }
+//      }
     }
 
     post {
         always {
-
-            // Cleanup
-            sh 'docker-compose down'
-            //archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
+            // Cleanup on Windows
+            bat 'docker-compose down'
+            // archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
         }
     }
 }
