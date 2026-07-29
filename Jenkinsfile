@@ -28,11 +28,11 @@ pipeline {
             }
         }
 
-        stage('Generate Allure Report') {
-            steps {
-                sh 'mvn allure:report'
-            }
-        }
+//         stage('Generate Allure Report') {
+//             steps {
+//                 sh 'mvn allure:report'
+//             }
+//         }
     }
 
     post {
@@ -40,15 +40,15 @@ pipeline {
             // Archive test results
             junit '**/target/surefire-reports/*.xml'
 
-            // Publish Allure report
-            allure([
-                reportBuildPolicy: 'ALWAYS',
-                results: [[path: 'allure-results']]
-            ])
+//             // Publish Allure report
+//             allure([
+//                 reportBuildPolicy: 'ALWAYS',
+//                 results: [[path: 'allure-results']]
+//             ])
 
             // Cleanup
             sh 'docker-compose down'
-            archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
+            //archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
         }
 
         failure {
