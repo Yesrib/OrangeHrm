@@ -15,7 +15,7 @@ pipeline {
             steps {
                 // Using 'bat' instead of 'sh', and 'timeout' instead of 'sleep'
                 bat 'docker-compose up -d'
-                bat 'timeout /t 10 /nobreak'
+                powershell 'Start-Sleep -Seconds 10'
             }
         }
 
