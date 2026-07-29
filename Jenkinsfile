@@ -37,22 +37,10 @@ pipeline {
 
     post {
         always {
-            // Archive test results
-            junit '**/target/surefire-reports/*.xml'
-
-//             // Publish Allure report
-//             allure([
-//                 reportBuildPolicy: 'ALWAYS',
-//                 results: [[path: 'allure-results']]
-//             ])
 
             // Cleanup
             sh 'docker-compose down'
             //archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
-        }
-
-        failure {
-            echo 'Tests failed - Check Allure reports'
         }
     }
 }
