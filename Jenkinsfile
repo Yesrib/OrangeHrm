@@ -2,7 +2,7 @@ pipeline {
     agent any
     tools {
         maven 'Maven_3.9.16'
-        allure 'Allure_2.35.0'
+        allure 'Allure_2.35.2'
     }
 
     stages {
