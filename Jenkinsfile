@@ -2,6 +2,7 @@ pipeline {
     agent any
     tools {
         maven 'Maven_3.9.16'
+        allure 'Allure_2.35.0'
     }
 
     stages {
@@ -29,18 +30,18 @@ pipeline {
             }
         }
 
-//      stage('Generate Allure Report') {
-//          steps {
-//              bat 'mvn allure:report'
-//          }
-//      }
     }
 
     post {
         always {
-            // Cleanup on Windows
-            bat 'docker-compose down'
-            // archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
+
+            allure(
+                includeProperties: false,
+                jdk: '',
+                results: [[path: 'allure-results']]
+            )
+
+            bat(returnStatus: true, script: 'docker compose down')
         }
     }
 }
