@@ -1,5 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.example</groupId>
@@ -12,35 +13,32 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <aspectj.version>1.9.22</aspectj.version>
+    <allure.version>2.35.2</allure.version>
   </properties>
 
   <dependencies>
-    <!-- Source: https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
       <version>4.45.0</version>
     </dependency>
-    <!-- Source: https://mvnrepository.com/artifact/org.testng/testng -->
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
       <version>7.12.0</version>
     </dependency>
-    <!-- Source: https://mvnrepository.com/artifact/io.qameta.allure/allure-testng -->
     <dependency>
       <groupId>io.qameta.allure</groupId>
       <artifactId>allure-testng</artifactId>
-      <version>2.35.2</version>
+      <version>${allure.version}</version>
       <scope>test</scope>
     </dependency>
-    <!-- Source: https://mvnrepository.com/artifact/com.aventstack/extentreports -->
     <dependency>
       <groupId>com.aventstack</groupId>
       <artifactId>extentreports</artifactId>
       <version>5.1.2</version>
     </dependency>
-    <!-- Source: https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
@@ -49,7 +47,7 @@
   </dependencies>
   <build>
     <plugins>
-      <!-- 1. Compiler Plugin (explicit version to fix Maven warning) -->
+      <!-- 1. Compiler Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -60,17 +58,41 @@
         </configuration>
       </plugin>
 
-      <!-- 2. Surefire Plugin with Allure TestNG Listener -->
+      <!-- 2. Dynamically set AspectJ weaver path -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.6.1</version>
+        <executions>
+          <execution>
+            <id>getClasspathFilenames</id>
+            <goals>
+              <goal>properties</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- 3. Surefire Plugin using the dynamic agent path -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.2.5</version>
         <configuration>
+          <argLine>
+            -javaagent:"${org.aspectj:aspectjweaver:jar}"
+          </argLine>
           <systemPropertyVariables>
-            <!-- Tells Allure to output JSON results in root allure-results directory -->
             <allure.results.directory>${project.basedir}/allure-results</allure.results.directory>
           </systemPropertyVariables>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.25</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
