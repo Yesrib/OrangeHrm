@@ -10,20 +10,12 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Start Docker') {
-            steps {
-                bat '''
-                net start com.docker.service
-                timeout /t 15
-                '''
-            }
-        }
 
         stage('Start Selenium Grid') {
             steps {
                 // Using 'bat' instead of 'sh', and 'timeout' instead of 'sleep'
                 bat 'docker-compose up -d'
-                powershell 'Start-Sleep -Seconds 10'
+                sleep(time: 15, unit: 'SECONDS')
             }
         }
 
