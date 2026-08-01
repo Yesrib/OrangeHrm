@@ -10,6 +10,14 @@ pipeline {
                 checkout scm
             }
         }
+        stage('Start Docker') {
+            steps {
+                bat '''
+                net start com.docker.service
+                timeout /t 15
+                '''
+            }
+        }
 
         stage('Start Selenium Grid') {
             steps {
