@@ -44,7 +44,10 @@ public final class DriverFactory {
 
     private static WebDriver createRemoteDriver(String browser) {
         // The default port for modern Selenium 4 Grid is 4444
-        String gridUrl = "http://localhost:4444/wd/hub";
+        String gridUrl = System.getProperty(
+                "grid.url",
+                "http://localhost:4444/wd/hub"
+        );
 
         try {
             return switch (browser) {
