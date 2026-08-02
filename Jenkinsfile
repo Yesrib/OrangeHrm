@@ -34,13 +34,20 @@ pipeline {
 
     post {
         always {
+            script {
+                echo "Before Allure: ${currentBuild.currentResult}"
+            }
 
-//             allure(
-//                 commandline: 'Allure_2.35.2',
-//                 includeProperties: false,
-//                 jdk: '',
-//                 results: [[path: 'allure-results']]
-//             )
+            allure(
+                commandline: 'Allure_2.35.2',
+                includeProperties: false,
+                jdk: '',
+                results: [[path: 'allure-results']]
+            )
+
+            script {
+                echo "After Allure: ${currentBuild.currentResult}"
+            }
 
             bat(returnStatus: true, script: 'docker compose down')
         }
