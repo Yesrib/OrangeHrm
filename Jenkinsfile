@@ -35,12 +35,12 @@ pipeline {
     post {
         always {
 
-            allure(
-                commandline: 'Allure_2.35.2',
-                includeProperties: false,
-                jdk: '',
-                results: [[path: 'allure-results']]
-            )
+//             allure(
+//                 commandline: 'Allure_2.35.2',
+//                 includeProperties: false,
+//                 jdk: '',
+//                 results: [[path: 'allure-results']]
+//             )
 
             bat(returnStatus: true, script: 'docker compose down')
         }
