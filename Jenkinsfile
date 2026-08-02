@@ -34,22 +34,16 @@ pipeline {
 
     post {
         always {
-            script {
-                echo "Before Allure: ${currentBuild.currentResult}"
-            }
+            // Stop Selenium Grid even if tests fail
+            bat(returnStatus: true, script: 'docker compose down')
 
+            // Publish Allure report
             allure(
                 commandline: 'Allure_2.35.2',
                 includeProperties: false,
                 jdk: '',
-                results: [[path: 'allure-results']]
+                results: [[path: 'target/allure-results']]
             )
-
-            script {
-                echo "After Allure: ${currentBuild.currentResult}"
-            }
-
-            bat(returnStatus: true, script: 'docker compose down')
         }
     }
 }
